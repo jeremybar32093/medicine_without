@@ -7,15 +7,23 @@ from flask import (
     render_template,
     jsonify,
     request,
-    redirect)
+    redirect,
+    abort)
 from flask_sqlalchemy import SQLAlchemy
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+import sqlalchemy
 
 #################################################
 # Flask Setup
 #################################################
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:postgres@localhost:5432/medicine_without"
+# Secret Key for being able to post back to database
+app.config["SECRET_KEY"] = "$MedicineWithout2021$"
 db = SQLAlchemy(app)
+# Create admin page object
+admin = Admin(app)
 
 #################################################
 # Database tables via classes
@@ -27,6 +35,10 @@ class Posts(db.Model):
     content = db.Column(db.Text)
     author = db.Column(db.String(255))
     date_posted = db.Column(db.DateTime)
+    slug = db.Column(db.String(255))
+
+# Model View for posts class
+admin.add_view(ModelView(Posts, db.session))
 
 
 #################################################
@@ -36,7 +48,10 @@ class Posts(db.Model):
 # Homepage route
 @app.route("/")
 def homepage():
-    return render_template("index.html")
+    # List all posts on homepage list
+    # *** FUTURE ENHANCEMENT - add pagination***
+    posts = Posts.query.all()
+    return render_template("index.html", posts = posts)
 
 # About page route
 @app.route("/about")
@@ -44,9 +59,13 @@ def about():
     return render_template("about.html")
 
 # Post page route
-@app.route("/post")
-def post():
-    return render_template("post.html")
+@app.route("/post/<string:slug>")
+def post(slug):
+    try:
+        post = Posts.query.filter_by(slug=slug).one()
+        return render_template("post.html", post = post)
+    except sqlalchemy.orm.exc.NoResultFound:
+        abort(404)
 
 # Contact page route
 @app.route("/contact")
