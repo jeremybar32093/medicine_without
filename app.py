@@ -8,7 +8,8 @@ from flask import (
     jsonify,
     request,
     redirect,
-    abort)
+    abort,
+    session)
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
@@ -37,8 +38,18 @@ class Posts(db.Model):
     date_posted = db.Column(db.DateTime)
     slug = db.Column(db.String(255))
 
+# admin view that contains login 
+class SecureModelView(ModelView):
+    # Override is_accesible method - within module, simply returns true by default
+    def is_accessible(self):
+        if "logged_in" in session:
+            return True
+        else:
+            abort(403)
+         
+
 # Model View for posts class
-admin.add_view(ModelView(Posts, db.session))
+admin.add_view(SecureModelView(Posts, db.session))
 
 
 #################################################
@@ -71,6 +82,25 @@ def post(slug):
 @app.route("/contact")
 def contact():
     return render_template("contact.html")
+
+# Login page
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        # Right now, handles only 1 user (admin user)
+        # ***** FUTURE ENHANCEMENT - ADD ABILITY FOR MULTIPLE USER SIGNUP *****
+        if request.form.get("username") == "admin" and request.form.get("password") == "$MedicineWithout2021$":
+            session['logged_in'] = True
+            return redirect("/admin")
+        else:
+            return render_template("login.html", failed=True)
+    return render_template("login.html")
+
+# Logout page
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/")
 
 
 #################################################
