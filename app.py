@@ -16,6 +16,8 @@ from flask_admin.contrib.sqla import ModelView
 import sqlalchemy
 from flask_mail import Mail, Message
 from config import mail_username, mail_password
+from wtforms import TextAreaField
+from wtforms.widgets import TextArea
 
 #################################################
 # Flask Setup
@@ -43,6 +45,17 @@ mail = Mail(app)
 #################################################
 # Database tables via classes
 #################################################
+class CKTextAreaWidget(TextArea):
+    def __call__(self, field, **kwargs):
+        if kwargs.get('class'):
+            kwargs['class'] += ' ckeditor'
+        else:
+            kwargs.setdefault('class', 'ckeditor')
+        return super(CKTextAreaWidget, self).__call__(field, **kwargs)
+
+class CKTextAreaField(TextAreaField):
+    widget = CKTextAreaWidget()
+
 class Posts(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     title = db.Column(db.String(255))
@@ -60,6 +73,11 @@ class SecureModelView(ModelView):
             return True
         else:
             abort(403)
+    extra_js = ['//cdn.ckeditor.com/4.6.0/standard/ckeditor.js']
+
+    form_overrides = {
+        'content': CKTextAreaField
+    }
          
 
 # Model View for posts class
