@@ -93,8 +93,23 @@ admin.add_view(SecureModelView(Posts, db.session))
 def homepage():
     # List all posts on homepage list
     # *** FUTURE ENHANCEMENT - add pagination***
-    posts = Posts.query.all()
-    return render_template("index.html", posts = posts)
+    posts = Posts.query.order_by(Posts.date_posted.desc())
+
+    # Pagination logic
+    # If there is a query string in the URL, request.args.get will grab the relevant defined variables
+    # i.e. localhost:5000/?page=[something]
+    page = request.args.get('page')
+
+    # Check if page is a digit - if so, convert to int. Otherwise, default to 1
+    if page and page.isdigit():
+        page = int(page)
+    else: 
+        page = 1
+
+    # Use built in paginate() method to create pages - ***update per_page argument after testing***
+    pages = posts.paginate(page=page, per_page = 5)
+
+    return render_template("index.html", posts=posts, pages=pages)
 
 # About page route
 @app.route("/about")

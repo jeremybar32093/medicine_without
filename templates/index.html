@@ -39,8 +39,8 @@
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
                         <div class="site-heading">
-                            <h1>Clean Blog</h1>
-                            <span class="subheading">A Blog Theme by Start Bootstrap</span>
+                            <h1>MedicineWithout</h1>
+                            <span class="subheading">MedicineWithout CT Scans. MedicineWithout MRI. MedicineWithout Labs. <br><br> <strong><em>MedicineWithout Fear.</em></strong></span>
                         </div>
                     </div>
                 </div>
@@ -52,7 +52,8 @@
                 <div class="col-md-10 col-lg-8 col-xl-7">
                     <!-- Iterate through posts passed from flask route and display on homepage -->
 
-                    {% for post in posts %}
+                    
+                    {% for post in pages.items %}
                     <!-- Post preview-->
                     <div class="post-preview">
                         <a href= {{ "/post/" + post.slug }}>
@@ -65,14 +66,37 @@
                             on {{ post.date_posted.strftime('%B %d, %Y') }}
                         </p>
                     </div>
+                    {% endfor %}
                     <!-- Divider-->
                     <hr class="my-4" />
 
-                    {% endfor %}
+                    
 
                     <!-- Pager-->
                     <!-- *** ENHANCEMENT TO ADD IN LATER *** -->
                     <!-- <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a></div> -->
+                    <nav aria-label="...">
+                        <ul class="pagination">
+                          <li class="page-item {% if not pages.has_prev %} disabled {% endif %}">
+                            <a class="page-link" href="./?page={{ pages.prev_num }}">Previous</a>
+                          </li>
+
+                          <!-- Create loop to render appropriate number of page links -->
+                          {% for page in pages.iter_pages() %}
+                          <li class="page-item {% if page == pages.page %} active {% endif %}">
+                            <a class="page-link" href="./?page={{ page }}">{{ page }}</a>
+                          </li>
+                          {% endfor %}
+
+
+                          <!-- <li class="page-item"><a class="page-link" href="#">1</a></li>
+
+                          <li class="page-item"><a class="page-link" href="#">3</a></li> -->
+                          <li class="page-item {% if not pages.has_next %} disabled {% endif %}">
+                            <a class="page-link" href="./?page={{ pages.next_num }}">Next</a>
+                          </li>
+                        </ul>
+                      </nav>
                 </div>
             </div>
         </div>
@@ -107,7 +131,7 @@
                                 </a>
                             </li>
                         </ul>
-                        <div class="small text-center text-muted fst-italic">Copyright &copy; Your Website 2021</div>
+                        <div class="small text-center text-muted fst-italic">Copyright &copy; MedicineWithout 2021</div>
                     </div>
                 </div>
             </div>
