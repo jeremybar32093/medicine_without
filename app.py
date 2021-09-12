@@ -60,6 +60,8 @@ class Posts(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     title = db.Column(db.String(255))
     subtitle = db.Column(db.String(255))
+    category = db.Column(db.String(255))
+    subcategory = db.Column(db.String(255))
     content = db.Column(db.Text)
     author = db.Column(db.String(255))
     date_posted = db.Column(db.DateTime)
@@ -77,6 +79,20 @@ class SecureModelView(ModelView):
 
     form_overrides = {
         'content': CKTextAreaField
+    }
+
+    form_choices = {
+    'category': [
+        ('community_ed', 'Community Education'),
+        ('ems_disaster', 'EMS and Disaster'),
+        ('tactical_med', 'Tactical Medicine'),
+        ('wilderness_med', 'Wilderness Medicine')
+    ], 
+    'subcategory': [
+        ('no_subcategory', 'None'),
+        ('care_other', 'Care of Others'),
+        ('self_care', 'Self Care')
+    ]
     }
          
 
@@ -159,6 +175,11 @@ def login():
 def logout():
     session.clear()
     return redirect("/")
+
+# Contributors page
+@app.route("/contributors")
+def contributors():
+    return render_template("contributors.html")
 
 
 #################################################
