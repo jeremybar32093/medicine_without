@@ -108,7 +108,6 @@ admin.add_view(SecureModelView(Posts, db.session))
 @app.route("/")
 def homepage():
     # List all posts on homepage list
-    # *** FUTURE ENHANCEMENT - add pagination***
     posts = Posts.query.order_by(Posts.date_posted.desc())
 
     # Pagination logic
@@ -180,6 +179,67 @@ def logout():
 @app.route("/contributors")
 def contributors():
     return render_template("contributors.html")
+
+# Community Education page
+@app.route("/community-education")
+def community_education():
+    posts = Posts.query.filter_by(category="community_ed").order_by(Posts.date_posted.desc())
+    # Pagination logic
+    # If there is a query string in the URL, request.args.get will grab the relevant defined variables
+    # i.e. localhost:5000/?page=[something]
+    page = request.args.get('page')
+
+    # Check if page is a digit - if so, convert to int. Otherwise, default to 1
+    if page and page.isdigit():
+        page = int(page)
+    else: 
+        page = 1
+
+    # Use built in paginate() method to create pages - ***update per_page argument after testing***
+    pages = posts.paginate(page=page, per_page = 5)
+
+    return render_template("community_education.html", posts=posts, pages=pages)
+
+# EMS & Disaster page
+@app.route("/ems-and-disaster")
+def ems_disaster():
+    posts = Posts.query.filter_by(category="ems_disaster").order_by(Posts.date_posted.desc())
+    # Pagination logic
+    # If there is a query string in the URL, request.args.get will grab the relevant defined variables
+    # i.e. localhost:5000/?page=[something]
+    page = request.args.get('page')
+
+    # Check if page is a digit - if so, convert to int. Otherwise, default to 1
+    if page and page.isdigit():
+        page = int(page)
+    else: 
+        page = 1
+
+    # Use built in paginate() method to create pages - ***update per_page argument after testing***
+    pages = posts.paginate(page=page, per_page = 5)
+
+    return render_template("ems_disaster.html", posts=posts, pages=pages)
+
+# Wilderness Medicine page
+@app.route("/wilderness-medicine")
+def wilderness_medicine():
+    posts = Posts.query.filter_by(category="wilderness_med").order_by(Posts.date_posted.desc())
+    # Pagination logic
+    # If there is a query string in the URL, request.args.get will grab the relevant defined variables
+    # i.e. localhost:5000/?page=[something]
+    page = request.args.get('page')
+
+    # Check if page is a digit - if so, convert to int. Otherwise, default to 1
+    if page and page.isdigit():
+        page = int(page)
+    else: 
+        page = 1
+
+    # Use built in paginate() method to create pages - ***update per_page argument after testing***
+    pages = posts.paginate(page=page, per_page = 5)
+
+    return render_template("wilderness_medicine.html", posts=posts, pages=pages)
+    
 
 
 #################################################
