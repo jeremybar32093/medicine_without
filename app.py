@@ -180,6 +180,11 @@ def logout():
 def contributors():
     return render_template("contributors.html")
 
+# Disclaimer page
+@app.route("/disclaimer")
+def disclaimer():
+    return render_template("disclaimer.html")
+
 # Community Education page
 @app.route("/community-education")
 def community_education():
