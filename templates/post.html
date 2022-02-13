@@ -53,9 +53,11 @@
                             <h2 class="subheading">{{ post.subtitle }}</h2>
                             <span class="meta">
                                 Posted by
-                                <a href="/contributors">{{ post.author }}</a>
+                                <u><a href="/contributors" style="color:rgb(0,133,161)">{{ post.author }}</a></u>
                                 on {{ post.date_posted.strftime('%B %d, %Y') }}
                             </span>
+                            <br>
+                            <i><span class="post-meta">By viewing this material, you understand and agree to our <u><a href="/disclaimer" style="color:rgb(0,133,161)">disclaimer, privacy notice and licensing information</a></u>.</span></i>
                         </div>
                     </div>
                 </div>
