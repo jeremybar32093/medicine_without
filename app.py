@@ -150,7 +150,7 @@ def contact():
         message = request.form.get("message")
         email_body = f"Name: {name}\nE-mail: {email}\nPhone: {phone}\n\n\n{message}"
 
-        msg = Message(subject=f"Mail from {name}", body=email_body, sender=mail_username, recipients=["jeremybar32093@gmail.com"])
+        msg = Message(subject=f"Mail from {name}", body=email_body, sender=mail_username, recipients=["medicinewithout@gmail.com"])
         mail.send(msg)
         return render_template("contact.html", success=True)
 
