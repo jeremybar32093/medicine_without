@@ -15,7 +15,7 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 import sqlalchemy
 from flask_mail import Mail, Message
-from config import mail_username, mail_password
+from config import mail_username, mail_password, recipient_email, admin_pw, admin_un
 from wtforms import TextAreaField
 from wtforms.widgets import TextArea
 
@@ -25,7 +25,7 @@ from wtforms.widgets import TextArea
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:postgres@localhost:5432/medicine_without"
 # Secret Key for being able to post back to database
-app.config["SECRET_KEY"] = "$MedicineWithout2021$"
+app.config["SECRET_KEY"] = admin_pw
 # SMTP Mail Server - outlook
 app.config["MAIL_SERVER"] = "smtp-mail.outlook.com"
 app.config["MAIL_PORT"] = 587
@@ -150,7 +150,7 @@ def contact():
         message = request.form.get("message")
         email_body = f"Name: {name}\nE-mail: {email}\nPhone: {phone}\n\n\n{message}"
 
-        msg = Message(subject=f"Mail from {name}", body=email_body, sender=mail_username, recipients=["medicinewithout@gmail.com"])
+        msg = Message(subject=f"Mail from {name}", body=email_body, sender=mail_username, recipients=[recipient_email])
         mail.send(msg)
         return render_template("contact.html", success=True)
 
@@ -162,7 +162,7 @@ def login():
     if request.method == "POST":
         # Right now, handles only 1 user (admin user)
         # ***** FUTURE ENHANCEMENT - ADD ABILITY FOR MULTIPLE USER SIGNUP *****
-        if request.form.get("username") == "admin" and request.form.get("password") == "$MedicineWithout2021$":
+        if request.form.get("username") == admin_un and request.form.get("password") == admin_pw:
             session['logged_in'] = True
             return redirect("/admin")
         else:
