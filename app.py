@@ -15,15 +15,25 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 import sqlalchemy
 from flask_mail import Mail, Message
-from config import mail_username, mail_password, recipient_email, admin_pw, admin_un
+# from config import mail_username, mail_password, recipient_email, admin_pw, admin_un, db_username, db_password
 from wtforms import TextAreaField
 from wtforms.widgets import TextArea
 
 #################################################
 # Flask Setup
 #################################################
+
+# Read in environment variables
+mail_username = os.environ.get("mail_username")
+mail_password = os.environ.get("mail_password")
+recipient_email = os.environ.get("recipient_email")
+admin_pw = os.environ.get("admin_pw")
+admin_un = os.environ.get("admin_un")
+db_username = os.environ.get("db_username")
+db_password = os.environ.get("db_password")
+
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:postgres@localhost:5432/medicine_without"
+app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{db_username}:{db_password}@medicinewithout.clwg1d6bpji9.us-east-2.rds.amazonaws.com:5432/medicine_without"
 # Secret Key for being able to post back to database
 app.config["SECRET_KEY"] = admin_pw
 # SMTP Mail Server - outlook
