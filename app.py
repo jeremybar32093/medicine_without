@@ -38,8 +38,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{db_username}:{db_passwor
 app.config["SECRET_KEY"] = admin_pw
 # SMTP Mail Server - outlook
 app.config["MAIL_SERVER"] = "smtp-mail.outlook.com"
-app.config["MAIL_PORT"] = 587
-app.config["MAIL_USE_TLS"] = True
+app.config["MAIL_PORT"] = 465
+app.config["MAIL_USE_TLS"] = False
 app.config["MAIL_USE_SSL"] = True
 app.config["MAIL_USERNAME"] = mail_username
 app.config["MAIL_PASSWORD"] = mail_password
