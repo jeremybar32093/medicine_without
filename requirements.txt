@@ -19,3 +19,4 @@ Werkzeug==2.0.3
 wincertstore==0.2
 WTForms==3.0.1
 zipp==3.7.0
+sendgrid==6.9.7
