@@ -18,6 +18,8 @@ from flask_mail import Mail, Message
 # from config import mail_username, mail_password, recipient_email, admin_pw, admin_un, db_username, db_password
 from wtforms import TextAreaField
 from wtforms.widgets import TextArea
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 #################################################
 # Flask Setup
@@ -25,7 +27,7 @@ from wtforms.widgets import TextArea
 
 # Read in environment variables
 mail_username = os.environ.get("mail_username")
-mail_password = os.environ.get("mail_password")
+# mail_password = os.environ.get("mail_password")
 recipient_email = os.environ.get("recipient_email")
 admin_pw = os.environ.get("admin_pw")
 admin_un = os.environ.get("admin_un")
@@ -42,7 +44,7 @@ app.config["MAIL_PORT"] = 465
 app.config["MAIL_USE_TLS"] = False
 app.config["MAIL_USE_SSL"] = True
 app.config["MAIL_USERNAME"] = mail_username
-app.config["MAIL_PASSWORD"] = mail_password
+# app.config["MAIL_PASSWORD"] = mail_password
 # app.config["MAIL_SUPPRESS_SEND"] = False
 
 # Create db object
@@ -160,8 +162,24 @@ def contact():
         message = request.form.get("message")
         email_body = f"Name: {name}\nE-mail: {email}\nPhone: {phone}\n\n\n{message}"
 
-        msg = Message(subject=f"Mail from {name}", body=email_body, sender=mail_username, recipients=[recipient_email])
-        mail.send(msg)
+        # msg = Message(subject=f"Mail from {name}", body=email_body, sender=mail_username, recipients=[recipient_email])
+        # mail.send(msg)
+
+        # Update to use sendgrid client instead - should hopefully work with heroku
+        msg = Mail(from_email = mail_username,
+                   to_emails = recipient_email,
+                   subject = f"Mail from {name}",
+                   plain_text_content = email_body)
+
+        try:
+            sg = SendGridAPIClient(os.environ.get("sendgrid_api_key"))
+            response = sg.send(msg)
+            print(response.status_code)
+            print(response.body)
+            print(response.headers)
+        except Exception as e:
+            print(e.message)
+
         return render_template("contact.html", success=True)
 
     return render_template("contact.html")
