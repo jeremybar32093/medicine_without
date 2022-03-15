@@ -171,14 +171,14 @@ def contact():
                    subject = f"Mail from {name}",
                    plain_text_content = email_body)
 
-        try:
-            sg = SendGridAPIClient(os.environ.get("sendgrid_api_key"))
-            response = sg.send(msg)
-            print(response.status_code)
-            print(response.body)
-            print(response.headers)
-        except Exception as e:
-            print(e.msg)
+        # try:
+        sg = SendGridAPIClient(os.environ.get("sendgrid_api_key"))
+        response = sg.send(msg)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+        # except Exception as e:
+        #     print(e.msg)
 
         return render_template("contact.html", success=True)
 
