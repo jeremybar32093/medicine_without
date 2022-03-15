@@ -178,7 +178,7 @@ def contact():
             print(response.body)
             print(response.headers)
         except Exception as e:
-            print(e.message)
+            print(e.msg)
 
         return render_template("contact.html", success=True)
 
