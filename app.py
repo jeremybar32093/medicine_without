@@ -273,6 +273,11 @@ def wilderness_medicine():
     pages = posts.paginate(page=page, per_page = 5)
 
     return render_template("wilderness_medicine.html", posts=posts, pages=pages)
+
+# Video library page
+@app.route("/video-library")
+def video_library():
+    return render_template("video_library.html")
     
 
 
